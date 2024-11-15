@@ -31,12 +31,12 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Method untuk menambahkan ActionListener pada setiap button
     private void addCategoryButtonListeners() {
-        btnMusik.addActionListener(e -> startQuizWithCategory("Musik Tradisional"));
+        btnMusik.addActionListener(e -> startQuizWithCategory("Alat Musik"));
         btnMakanan.addActionListener(e -> startQuizWithCategory("Makanan Daerah"));
         btnPakaian.addActionListener(e -> startQuizWithCategory("Pakaian Adat"));
         btnRumah.addActionListener(e -> startQuizWithCategory("Rumah Adat"));
-        btnTarian.addActionListener(e -> startQuizWithCategory("Tari Tradisional"));
-        btnSenjata.addActionListener(e -> startQuizWithCategory("Senjata Tradisional"));
+        btnTarian.addActionListener(e -> startQuizWithCategory("Tarian Tradisional"));
+        btnSenjata.addActionListener(e -> startQuizWithCategory("Senjata Daerah"));
     }
     
     // Method untuk memulai quiz berdasarkan kategori
@@ -49,7 +49,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Method untuk menampilkan data dari tabel Scores ke JTable dengan username
     private void tampilkanDataScores() {
         // Kolom yang akan ditampilkan di JTable
-        String[] kolom = {"Score ID", "Username", "Score", "Date Taken"};
+        String[] kolom = {"Username", "Score", "Date Taken"};
 
         // DefaultTableModel untuk JTable
         DefaultTableModel model = new DefaultTableModel(kolom, 0);

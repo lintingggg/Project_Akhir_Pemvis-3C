@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 /**
  *
  * @author faza
@@ -23,6 +24,8 @@ public class PertanyaanFrame extends javax.swing.JFrame {
     private String selectedCategory;
     private int userId;
     private String username;
+    private HashMap<Integer, String> userAnswers = new HashMap<>(); // Menyimpan jawaban user
+    private int currentQuestionIndex = 0;
     /**
      * Creates new form PertanyaanFrame
      */
@@ -36,7 +39,7 @@ public class PertanyaanFrame extends javax.swing.JFrame {
         this.jawabanBenarList = new ArrayList<>();
         this.nomorPertanyaan = 0;
         ambilPertanyaanDariDatabase();
-        tampilkanPertanyaan();
+        tampilkanPertanyaan(currentQuestionIndex);
     }
 
     // Method untuk mengambil pertanyaan dari database
@@ -82,7 +85,7 @@ public class PertanyaanFrame extends javax.swing.JFrame {
     }
     
     // Method untuk menampilkan pertanyaan
-    private void tampilkanPertanyaan() {
+    private void tampilkanPertanyaan(int index) {
         if (pertanyaanList.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Tidak ada pertanyaan untuk kategori ini", "Info", JOptionPane.INFORMATION_MESSAGE);
             this.dispose();
@@ -118,14 +121,45 @@ public class PertanyaanFrame extends javax.swing.JFrame {
             lbl_previewGambar.setIcon(new ImageIcon(scaledDefaultImage));
         }
 
-        // Reset pilihan sebelumnya
-        rb_pilihan.clearSelection();
+        // Periksa apakah ada jawaban yang tersimpan sebelumnya
+        if (userAnswers.containsKey(index)) {
+            String savedAnswer = userAnswers.get(index);
+            switch (savedAnswer) {
+                case "A":
+                    jRadioButton1.setSelected(true);
+                    break;
+                case "B":
+                    jRadioButton2.setSelected(true);
+                    break;
+                case "C":
+                    jRadioButton3.setSelected(true);
+                    break;
+                case "D":
+                    jRadioButton4.setSelected(true);
+                    break;
+            }
+        } else {
+            // Jika tidak ada jawaban tersimpan, hapus pilihan
+            rb_pilihan.clearSelection();
+        }
 
         // Ganti teks tombol menjadi "Submit" jika pertanyaan terakhir
         if (nomorPertanyaan == pertanyaanList.size() - 1) {
-            jButton1.setText("Submit");
+            jButton2.setText("Submit");
         } else {
-            jButton1.setText("NEXT");
+            jButton2.setText("NEXT");
+        }
+    }
+    
+    private void saveUserAnswer(int index) {
+        if (jRadioButton1.isSelected()) {
+            userAnswers.put(index, "A");
+        } else if (jRadioButton2.isSelected()) {
+            userAnswers.put(index, "B");
+        } else if (jRadioButton3.isSelected()) {
+            userAnswers.put(index, "C");
+        } else if (jRadioButton4.isSelected()) {
+            userAnswers.put(index, "D");
         }
     }
     
@@ -146,6 +180,10 @@ public class PertanyaanFrame extends javax.swing.JFrame {
     // Method untuk menangani tombol NEXT/SUBMIT
     private void handleNextButton() {
         selectedAnswer = getSelectedAnswer();
+        // Simpan jawaban sebelum pindah pertanyaan
+        saveUserAnswer(currentQuestionIndex);
+
+        currentQuestionIndex++;
 
         if (selectedAnswer == null) {
             JOptionPane.showMessageDialog(this, "Silakan pilih salah satu jawaban terlebih dahulu!", "Peringatan", JOptionPane.WARNING_MESSAGE);
@@ -160,7 +198,7 @@ public class PertanyaanFrame extends javax.swing.JFrame {
 
         if (nomorPertanyaan < pertanyaanList.size() - 1) {
             nomorPertanyaan++;
-            tampilkanPertanyaan();
+            tampilkanPertanyaan(currentQuestionIndex);
         } else {
             simpanScoreKeDatabase(score);
             JOptionPane.showMessageDialog(this, "Quiz Selesai! Skor Anda: " + score);
@@ -171,8 +209,12 @@ public class PertanyaanFrame extends javax.swing.JFrame {
     // Method untuk menangani tombol Previous
     private void handlePreviousButton() {
         if (nomorPertanyaan > 0) {
+            // Simpan jawaban sebelum kembali ke pertanyaan sebelumnya
+            saveUserAnswer(currentQuestionIndex);
+
+            currentQuestionIndex--;
             nomorPertanyaan--;
-            tampilkanPertanyaan();
+            tampilkanPertanyaan(currentQuestionIndex);
         } else {
             JOptionPane.showMessageDialog(this, "Ini adalah pertanyaan pertama!", "Info", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -202,7 +244,6 @@ public class PertanyaanFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         rb_pilihan = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
@@ -402,6 +443,11 @@ public class PertanyaanFrame extends javax.swing.JFrame {
         );
 
         jButton1.setText("Kembali");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Lanjut");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -484,6 +530,11 @@ public class PertanyaanFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         handleNextButton();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        handlePreviousButton();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

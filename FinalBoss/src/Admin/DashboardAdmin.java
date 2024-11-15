@@ -4,6 +4,7 @@
  */
 package Admin;
 
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -139,7 +140,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(DashboardAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        FlatMacLightLaf.setup();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -160,7 +161,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
     private void execute() {
         ImageIcon iconCategory = new ImageIcon(getClass().getResource("/image/icons8-hamburger-button-30.png"));
         
-        MenuItem Cat1 = new MenuItem(null, true, iconCategory, "Makanan", new ActionListener() {
+        MenuItem Cat1 = new MenuItem(null, true, iconCategory, "Makanan Daerah", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 jPanel5.removeAll();
@@ -169,10 +170,53 @@ public class DashboardAdmin extends javax.swing.JFrame {
                 jPanel5.revalidate();
             }
         });
-        MenuItem Cat2 = new MenuItem(null, true, iconCategory, "Makanan", null);
-        MenuItem Cat3 = new MenuItem(null, true, iconCategory, "Makanan", null);
+        MenuItem Cat2 = new MenuItem(null, true, iconCategory, "Pakaian Adat", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jPanel5.removeAll();
+                jPanel5.add(new FormPakaian());
+                jPanel5.repaint();
+                jPanel5.revalidate();
+            }
+        });
+        MenuItem Cat3 = new MenuItem(null, true, iconCategory, "Tarian Tradisional", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jPanel5.removeAll();
+                jPanel5.add(new FormTarian());
+                jPanel5.repaint();
+                jPanel5.revalidate();
+            }
+        });
+        MenuItem Cat4 = new MenuItem(null, true, iconCategory, "Rumah Adat", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jPanel5.removeAll();
+                jPanel5.add(new FormRumah());
+                jPanel5.repaint();
+                jPanel5.revalidate();
+            }
+        });
+        MenuItem Cat5 = new MenuItem(null, true, iconCategory, "Alat Musik", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jPanel5.removeAll();
+                jPanel5.add(new FormMusik());
+                jPanel5.repaint();
+                jPanel5.revalidate();
+            }
+        });
+        MenuItem Cat6 = new MenuItem(null, true, iconCategory, "Senjata Daerah", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jPanel5.removeAll();
+                jPanel5.add(new FormSenjata());
+                jPanel5.repaint();
+                jPanel5.revalidate();
+            }
+        });
         
-        MenuItem menuCategory = new MenuItem(iconCategory,false,null,"Category",null, Cat1,Cat2,Cat3);
+        MenuItem menuCategory = new MenuItem(iconCategory,false,null,"Category",null, Cat1,Cat2,Cat3,Cat4,Cat5,Cat6);
         
         addMenu(menuCategory);
     }

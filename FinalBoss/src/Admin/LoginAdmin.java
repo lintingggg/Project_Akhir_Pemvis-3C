@@ -4,6 +4,13 @@
  */
 package Admin;
 
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author faza
@@ -16,7 +23,40 @@ public class LoginAdmin extends javax.swing.JFrame {
     public LoginAdmin() {
         initComponents();
     }
+    private void performAdminLogin() {
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
 
+        // Check if username and password are valid
+        if (validateAdminLogin(username, password)) {
+            JOptionPane.showMessageDialog(this, "Login berhasil sebagai Admin!");
+            new DashboardAdmin().setVisible(true);  // Open admin functionality
+            dispose();  // Close Login frame
+        } else {
+            JOptionPane.showMessageDialog(this, "Username atau password salah.", "Login Gagal", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private boolean validateAdminLogin(String username, String password) {
+        boolean isValidAdmin = false;
+        try (Connection conn = koneksi.getConnection()) {
+            String query = "SELECT * FROM users WHERE username = ? AND password = ? AND role = 'admin'";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                isValidAdmin = true;  // Match found, user is valid admin
+            }
+
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isValidAdmin;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,10 +72,10 @@ public class LoginAdmin extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        usernameField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnLogin = new javax.swing.JButton();
+        passwordField = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -58,17 +98,22 @@ public class LoginAdmin extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         jLabel4.setText("Username");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        usernameField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                usernameFieldActionPerformed(evt);
             }
         });
 
         jLabel5.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         jLabel5.setText("Password");
 
-        jButton1.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
-        jButton1.setText("Login");
+        btnLogin.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
+        btnLogin.setText("Login");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout roundedPanel1Layout = new javax.swing.GroupLayout(roundedPanel1);
         roundedPanel1.setLayout(roundedPanel1Layout);
@@ -83,9 +128,9 @@ public class LoginAdmin extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(jLabel5)
                     .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)))
+                        .addComponent(passwordField, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(usernameField, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         roundedPanel1Layout.setVerticalGroup(
@@ -100,13 +145,13 @@ public class LoginAdmin extends javax.swing.JFrame {
                 .addGap(70, 70, 70)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(98, Short.MAX_VALUE))
         );
 
@@ -130,9 +175,13 @@ public class LoginAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_usernameFieldActionPerformed
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        performAdminLogin();
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -160,7 +209,7 @@ public class LoginAdmin extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(LoginAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        FlatMacLightLaf.setup();    
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -170,15 +219,15 @@ public class LoginAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JPasswordField passwordField;
     private Custom.RoundedPanel roundedPanel1;
+    private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
 }

@@ -24,6 +24,7 @@ public class FormMakanan extends javax.swing.JPanel {
      */
     public FormMakanan() {
         initComponents();
+        idQuestionField.setEditable(false);
         btnTambahEdit.setText("Tambah");
         btnHapus.setVisible(false);
         readQuestionsToTable(jTable1);
@@ -79,7 +80,7 @@ public class FormMakanan extends javax.swing.JPanel {
 
         try (Connection conn = koneksi.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM questions")) {
+             ResultSet rs = stmt.executeQuery("SELECT * FROM questions WHERE category = 'Makanan Daerah'")) {
 
             model.setRowCount(0);
             while (rs.next()) {
@@ -124,6 +125,7 @@ public class FormMakanan extends javax.swing.JPanel {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Gagal menambahkan pertanyaan: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        readQuestionsToTable(jTable1);
     }
     
     // Method untuk memperbarui pertanyaan dengan JComboBox
@@ -159,6 +161,7 @@ public class FormMakanan extends javax.swing.JPanel {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Gagal memperbarui pertanyaan: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        readQuestionsToTable(jTable1);
     }
     private void clearForm() {
         txtPertanyaan.setText("");
@@ -266,6 +269,9 @@ public class FormMakanan extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.CardLayout());
 
+        jPanel2.setBackground(new java.awt.Color(248, 244, 225));
+
+        jTable1.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -284,8 +290,13 @@ public class FormMakanan extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jLabel1.setText("jLabel1");
+        jLabel1.setFont(new java.awt.Font("Poppins SemiBold", 0, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(84, 51, 16));
+        jLabel1.setText("Daftar Pertanyaan");
 
+        btnTambahEdit.setBackground(new java.awt.Color(84, 51, 16));
+        btnTambahEdit.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        btnTambahEdit.setForeground(new java.awt.Color(255, 255, 255));
         btnTambahEdit.setText("Tambah");
         btnTambahEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -293,6 +304,9 @@ public class FormMakanan extends javax.swing.JPanel {
             }
         });
 
+        btnHapus.setBackground(new java.awt.Color(84, 51, 16));
+        btnHapus.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        btnHapus.setForeground(new java.awt.Color(255, 255, 255));
         btnHapus.setText("Hapus");
         btnHapus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -312,9 +326,9 @@ public class FormMakanan extends javax.swing.JPanel {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btnTambahEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnTambahEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
+                                .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -325,17 +339,24 @@ public class FormMakanan extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnHapus, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-                    .addComponent(btnTambahEdit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnTambahEdit, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                    .addComponent(btnHapus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
                 .addGap(61, 61, 61))
         );
 
         jPanel1.add(jPanel2, "card2");
 
-        jLabel2.setText("Tambah");
+        tambahBarang.setBackground(new java.awt.Color(248, 244, 225));
 
+        jLabel2.setFont(new java.awt.Font("Poppins SemiBold", 0, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(84, 51, 16));
+        jLabel2.setText("Tambah Pertanyaan");
+
+        btnSimpan.setBackground(new java.awt.Color(84, 51, 16));
+        btnSimpan.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        btnSimpan.setForeground(new java.awt.Color(255, 255, 255));
         btnSimpan.setText("Simpan");
         btnSimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -343,6 +364,9 @@ public class FormMakanan extends javax.swing.JPanel {
             }
         });
 
+        btnBatal.setBackground(new java.awt.Color(84, 51, 16));
+        btnBatal.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        btnBatal.setForeground(new java.awt.Color(255, 255, 255));
         btnBatal.setText("Batal");
         btnBatal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -350,26 +374,55 @@ public class FormMakanan extends javax.swing.JPanel {
             }
         });
 
+        jPanel3.setBackground(new java.awt.Color(248, 244, 225));
+
+        jLabel3.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(84, 51, 16));
         jLabel3.setText("Id");
 
+        jLabel4.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(84, 51, 16));
         jLabel4.setText("Kategori");
 
+        jLabel5.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(84, 51, 16));
         jLabel5.setText("Pertanyaan");
 
+        idQuestionField.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        idQuestionField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idQuestionFieldActionPerformed(evt);
+            }
+        });
+
+        cmbKategori.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        cmbKategori.setForeground(new java.awt.Color(84, 51, 16));
         cmbKategori.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         txtPertanyaan.setColumns(20);
+        txtPertanyaan.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         txtPertanyaan.setRows(5);
         jScrollPane3.setViewportView(txtPertanyaan);
 
+        jLabel6.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(84, 51, 16));
         jLabel6.setText("Opsi 1");
 
+        opsi1Field.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+
+        jLabel7.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(84, 51, 16));
         jLabel7.setText("Opsi 2");
 
+        jLabel10.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(84, 51, 16));
         jLabel10.setText("Gambar");
 
         lbl_gambar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        btn_uploadimg.setBackground(new java.awt.Color(84, 51, 16));
+        btn_uploadimg.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        btn_uploadimg.setForeground(new java.awt.Color(255, 255, 255));
         btn_uploadimg.setLabel("Upload");
         btn_uploadimg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -377,12 +430,26 @@ public class FormMakanan extends javax.swing.JPanel {
             }
         });
 
+        opsi2Field.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+
+        jLabel8.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(84, 51, 16));
         jLabel8.setText("Opsi 3");
 
+        opsi3Field.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+
+        jLabel9.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(84, 51, 16));
         jLabel9.setText("Opsi 4");
 
+        opsi4Field.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+
+        jLabel11.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(84, 51, 16));
         jLabel11.setText("Jawaban");
 
+        answerComboBox.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
+        answerComboBox.setForeground(new java.awt.Color(84, 51, 16));
         answerComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "B", "C", "D" }));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -391,38 +458,36 @@ public class FormMakanan extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_uploadimg, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel11))
+                .addGap(76, 76, 76)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9)
-                            .addComponent(jLabel11))
-                        .addGap(76, 76, 76)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(idQuestionField)
+                                .addComponent(cmbKategori, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(opsi4Field, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(opsi3Field, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(opsi2Field, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(opsi1Field, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(52, 52, 52)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(idQuestionField)
-                                        .addComponent(cmbKategori, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(opsi4Field, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(opsi3Field, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(opsi2Field, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(opsi1Field, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(52, 52, 52)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(imgPath, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lbl_gambar, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel10)))
-                            .addComponent(answerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(52, Short.MAX_VALUE))
+                            .addComponent(imgPath, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_gambar, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10)
+                            .addComponent(btn_uploadimg, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(answerComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -446,21 +511,21 @@ public class FormMakanan extends javax.swing.JPanel {
                                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(9, 9, 9)
-                                .addComponent(lbl_gambar, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addComponent(opsi1Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addComponent(btn_uploadimg, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18))
+                                .addComponent(lbl_gambar, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(imgPath, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(opsi1Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(21, 21, 21))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(btn_uploadimg, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
                     .addComponent(opsi2Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -602,6 +667,7 @@ public class FormMakanan extends javax.swing.JPanel {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Gagal menghapus pertanyaan: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        readQuestionsToTable(jTable1);
     }
     
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
@@ -648,6 +714,10 @@ public class FormMakanan extends javax.swing.JPanel {
         int idQuestion = Integer.parseInt(idQuestionField.getText());
         deleteQuestion(idQuestion);
     }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void idQuestionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idQuestionFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_idQuestionFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
