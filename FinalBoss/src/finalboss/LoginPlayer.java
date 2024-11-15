@@ -5,7 +5,11 @@
 package finalboss;
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 /**
  *
  * @author faza
@@ -19,6 +23,65 @@ public class LoginPlayer extends javax.swing.JFrame {
         initComponents();
     }
 
+    // Metode login yang diubah untuk hanya memerlukan username
+    private void performPlayerLogin() {
+        String username = usernameField.getText().trim(); // Ambil input username
+
+        // Validasi input
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username tidak boleh kosong!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Cek apakah username sudah ada di database
+        int userId = getUserIdOrCreate(username);
+
+        if (userId != -1) {
+            JOptionPane.showMessageDialog(this, "Login berhasil sebagai Player!");
+            // Buka MainFrame dengan mengirimkan userId
+            new MainFrame(username, userId).setVisible(true);
+            dispose(); // Tutup LoginFrame
+        } else {
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat login.", "Login Gagal", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Metode untuk mendapatkan user_id berdasarkan username, atau membuat user baru jika tidak ada
+    private int getUserIdOrCreate(String username) {
+        int userId = -1;
+        try (Connection conn = koneksi.getConnection()) {
+            // Cek apakah username sudah ada
+            String checkQuery = "SELECT user_id FROM users WHERE username = ? AND role = 'player'";
+            PreparedStatement checkStmt = conn.prepareStatement(checkQuery);
+            checkStmt.setString(1, username);
+            ResultSet rs = checkStmt.executeQuery();
+
+            if (rs.next()) {
+                // Username sudah ada, ambil user_id
+                userId = rs.getInt("user_id");
+            } else {
+                // Username belum ada, buat akun baru dengan password kosong dan role 'player'
+                String insertQuery = "INSERT INTO users (username, password, role) VALUES (?, '', 'player')";
+                PreparedStatement insertStmt = conn.prepareStatement(insertQuery, PreparedStatement.RETURN_GENERATED_KEYS);
+                insertStmt.setString(1, username);
+                insertStmt.executeUpdate();
+
+                // Ambil user_id dari user baru yang baru saja dibuat
+                ResultSet generatedKeys = insertStmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    userId = generatedKeys.getInt(1);
+                }
+
+                insertStmt.close();
+            }
+
+            rs.close();
+            checkStmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userId;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,9 +101,7 @@ public class LoginPlayer extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        usernameField = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -49,6 +110,8 @@ public class LoginPlayer extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(84, 51, 16));
 
         roundedPanel1.setForeground(new java.awt.Color(248, 244, 225));
+        roundedPanel1.setRoundBottomLeft(90);
+        roundedPanel1.setRoundTopLeft(90);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/gaotKaca.png"))); // NOI18N
 
@@ -82,7 +145,7 @@ public class LoginPlayer extends javax.swing.JFrame {
                 .addGroup(roundedPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(roundedPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(0, 55, Short.MAX_VALUE))
+                        .addGap(0, 15, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, roundedPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel4)))
@@ -104,19 +167,27 @@ public class LoginPlayer extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Poppins Medium", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(248, 244, 225));
-        jLabel7.setText("Mau main? Login dulu!");
+        jLabel7.setText("Mau main? Masuk dulu!");
 
         jLabel8.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(248, 244, 225));
         jLabel8.setText("Username");
 
-        jLabel9.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(248, 244, 225));
-        jLabel9.setText("Password");
+        usernameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameFieldActionPerformed(evt);
+            }
+        });
 
         jButton1.setBackground(new java.awt.Color(175, 143, 111));
+        jButton1.setFont(new java.awt.Font("Poppins Medium", 0, 12)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Login");
+        jButton1.setText("Masuk");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -129,16 +200,13 @@ public class LoginPlayer extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField1)
-                    .addComponent(jLabel9)
-                    .addComponent(jPasswordField1)
+                    .addComponent(usernameField)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
                 .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(roundedPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jLabel5)
@@ -146,23 +214,30 @@ public class LoginPlayer extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
-                .addGap(49, 49, 49)
+                .addGap(90, 90, 90)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(roundedPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 500));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 460));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void usernameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameFieldActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        performPlayerLogin();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -209,10 +284,8 @@ public class LoginPlayer extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
     private Custom.RoundedPanel roundedPanel1;
+    private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
 }
