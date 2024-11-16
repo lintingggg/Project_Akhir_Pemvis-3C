@@ -115,7 +115,7 @@ public class PertanyaanFrame extends javax.swing.JFrame {
             lbl_previewGambar.setIcon(new ImageIcon(scaledImage));
             lbl_previewGambar.setText("");
         } else {
-            ImageIcon defaultImageIcon = new ImageIcon(getClass().getResource("/image/3dChar.png"));
+            ImageIcon defaultImageIcon = new ImageIcon(getClass().getResource("/image/apa.png"));
             Image defaultImage = defaultImageIcon.getImage();
             Image scaledDefaultImage = defaultImage.getScaledInstance(lbl_previewGambar.getWidth(), lbl_previewGambar.getHeight(), Image.SCALE_SMOOTH);
             lbl_previewGambar.setIcon(new ImageIcon(scaledDefaultImage));
