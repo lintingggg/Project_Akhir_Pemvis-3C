@@ -20,7 +20,12 @@ Project ini dibuat menggunakan tools dan bahasa:
 
 # Overview
 1. Login
-![Alt Text](./images/nama-gambar.png)
-
+![Login](./images/loginFrame.PNG)
+2. Beranda
+![Beranda](./images/MainFrame.PNG)
+3. Quiz
+![Quiz](./images/PertanyaanFrame.PNG)
+4. Admin
+![Admin](./images/Capture.PNG)
 👤 Penulis
-Muhammad Iqbal Faza – GitHub | LinkedIn
+Muhammad Iqbal Faza – [GitHub](https://github.com/username) | [LinkedIn](https://linkedin.com/in/username)
