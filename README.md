@@ -14,18 +14,35 @@ Project ini dibuat menggunakan tools dan bahasa:
 
 # 📦 Instalasi  
 1. Clone repositori ini:  
-   "git clone https://github.com/username/repository.git"
+   "git clone https://github.com/lintingggg/Project_Akhir_Pemvis-3C.git"
 2. Import databate nya.
 3. Gass Runn
 
 # Overview
 1. Login
+
+
 ![Login](./images/loginFrame.PNG)
+
+
 2. Beranda
+
+
 ![Beranda](./images/MainFrame.PNG)
+
+
 3. Quiz
+
+   
 ![Quiz](./images/PertanyaanFrame.PNG)
+
+
 4. Admin
+
+   
 ![Admin](./images/Capture.PNG)
+
+
+
 👤 Penulis
-Muhammad Iqbal Faza – [GitHub](https://github.com/username) | [LinkedIn](https://linkedin.com/in/username)
+Muhammad Iqbal Faza – [GitHub](https://github.com/lintingggg) | [LinkedIn](https://www.linkedin.com/in/muhammad-iqbal-faza)
